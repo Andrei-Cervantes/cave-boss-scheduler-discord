@@ -10,7 +10,7 @@ const client = new Client({
   ],
 });
 
-const TIMEZONE = "America/New_York";
+const TIMEZONE = "Asia/Manila";
 
 // Parses strings like "1h30m", "90m", etc.
 function parseDuration(str) {
