@@ -41,6 +41,8 @@ A Discord bot for scheduling cave boss spawn alerts with automatic preparation a
    TIMEZONE=your_timezone_here
    PREP_MESSAGE=your_prep_message_here
    SPAWN_MESSAGE=your_spawn_message_here
+   PREP_ALERT_TIME=your_prep_time_in_minutes_here (default=5)
+   SPAWN_ALERT_TIME=your_spawn_time_in_minutes_here (default=1)
    ```
 
 4. **Run the bot**

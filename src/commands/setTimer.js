@@ -19,14 +19,12 @@ export async function handleSetTimer(message, args) {
     const timerService = new TimerService();
     await timerService.scheduleBossAlerts(message.channel, totalMinutes);
 
-    const alertPreparationTime = new Date(
-      Date.now() + (totalMinutes - CONFIG.PREP_ALERT_TIME) * 60 * 1000
-    );
+    const alertExactSpawnTime = new Date(Date.now() + totalMinutes * 60 * 1000);
 
     return message.reply(
-      `✅ Alert set for ${alertPreparationTime.toLocaleTimeString("en-US", {
+      `✅ Alert set for ${alertExactSpawnTime.toLocaleTimeString("en-US", {
         timeZone: CONFIG.TIMEZONE,
-      })} (${CONFIG.PREP_ALERT_TIME} minutes before spawn).`
+      })}, everybody please prepare!`
     );
   } catch (err) {
     return message.reply("❌ Error: " + err.message);
