@@ -1,9 +1,11 @@
 require("dotenv").config();
 const { Client, GatewayIntentBits } = require("discord.js");
-const { CronJob } = require("cron");
 
 // Utils
-import { parseDuration } from "./utils.js";
+import { parseDuration, alertMessage } from "./utils.js";
+
+// Constants
+import { TIMEZONE, PREP_MESSAGE, SPAWN_MESSAGE } from "./constants.js";
 
 const client = new Client({
   intents: [
@@ -13,46 +15,45 @@ const client = new Client({
   ],
 });
 
-const TIMEZONE = "Asia/Manila";
-
 client.once("ready", () => {
   console.log(`${client.user.tag} is online!`);
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.author.bot || !message.content.startsWith("!setbossin")) return;
+  if (message.author.bot || !message.content.startsWith("!setTimer")) return;
 
   try {
     const args = message.content.split(" ").slice(1);
     if (args.length === 0) {
       return message.reply(
-        "⏰ Usage: `!setbossin 1h30m`, `!setbossin 90m`, etc."
+        "⏰ Usage: `!setTimer 1h30m`, `!setTimer 90m`, etc."
       );
     }
 
     const totalMinutes = parseDuration(args[0]);
 
     if (totalMinutes <= 5) {
-      return message.reply("❌ Time must be greater than 5 minutes.");
+      return message.reply(
+        "❌ Time must be greater than 5 minutes to allow for preparation/regrouping."
+      );
     }
 
-    const alertInMs = (totalMinutes - 5) * 60 * 1000;
-    const alertTime = new Date(Date.now() + alertInMs);
+    // Alert prep time
+    const alertPreparationInMs = (totalMinutes - 5) * 60 * 1000;
+    const alertPreparationTime = new Date(Date.now() + alertPreparationInMs);
 
-    new CronJob(
-      alertTime,
-      () => {
-        message.channel.send(
-          "@here 🚨 Boss is spawning in 5 minutes! Get ready!"
-        );
-      },
-      null,
-      true,
-      TIMEZONE
-    );
+    // Alert spawn time
+    const alertSpawnInMs = (totalMinutes - 1) * 60 * 1000;
+    const alertSpawnTime = new Date(Date.now() + alertSpawnInMs);
+
+    // Alert preparation
+    alertMessage(alertPreparationTime, PREP_MESSAGE, TIMEZONE);
+
+    // Alert spawn
+    alertMessage(alertSpawnTime, SPAWN_MESSAGE, TIMEZONE);
 
     message.reply(
-      `✅ Alert set for ${alertTime.toLocaleTimeString("en-US", {
+      `✅ Alert set for ${alertPreparationTime.toLocaleTimeString("en-US", {
         timeZone: TIMEZONE,
       })} (5 minutes before spawn).`
     );
