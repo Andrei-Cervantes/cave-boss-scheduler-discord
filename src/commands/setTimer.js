@@ -16,15 +16,20 @@ export async function handleSetTimer(message, args) {
       );
     }
 
-    const timerService = new TimerService();
-    await timerService.scheduleBossAlerts(message.channel, totalMinutes);
-
-    const alertExactSpawnTime = new Date(Date.now() + totalMinutes * 60 * 1000);
+    const timerInfo = await TimerService.scheduleBossAlerts(
+      message.channel,
+      totalMinutes
+    );
 
     return message.reply(
-      `✅ Alert set for ${alertExactSpawnTime.toLocaleTimeString("en-US", {
-        timeZone: CONFIG.TIMEZONE,
-      })}, everybody please prepare!`
+      `✅ Timer set for ${totalMinutes} minutes!\n` +
+        `⏰ Prep alert: ${timerInfo.prepTime.toLocaleTimeString("en-US", {
+          timeZone: CONFIG.TIMEZONE,
+        })} (${CONFIG.PREP_ALERT_TIME}m before spawn)\n` +
+        `🚨 Spawn alert: ${timerInfo.spawnTime.toLocaleTimeString("en-US", {
+          timeZone: CONFIG.TIMEZONE,
+        })} (${CONFIG.SPAWN_ALERT_TIME}m before spawn)\n` +
+        `Use \`!status\` to check timer or \`!stopTimer\` to cancel.`
     );
   } catch (err) {
     return message.reply("❌ Error: " + err.message);

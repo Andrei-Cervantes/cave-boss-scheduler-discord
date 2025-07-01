@@ -18,7 +18,12 @@ client.once("ready", () => {
 client.on("messageCreate", async (message) => {
   if (message.author.bot || !message.content.startsWith("!")) return;
 
-  await handleCommand(message);
+  try {
+    await handleCommand(message);
+  } catch (error) {
+    console.error("Error handling command:", error);
+    message.reply("❌ An error occurred while processing your command.");
+  }
 });
 
 client.login(process.env.DISCORD_TOKEN);
