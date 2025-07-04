@@ -11,8 +11,16 @@ const client = new Client({
   ],
 });
 
+// awake every 14 mins
+function loopAwake() {
+  setInterval(() => {
+    console.log("awake");
+  }, 840000);
+}
+
 client.once("ready", () => {
   console.log(`${client.user.tag} is online!`);
+  loopAwake();
 });
 
 client.on("messageCreate", async (message) => {
