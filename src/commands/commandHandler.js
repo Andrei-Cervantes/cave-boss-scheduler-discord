@@ -14,6 +14,9 @@ const commands = {
 export async function handleCommand(message) {
   const args = message.content.split(" ");
   const commandName = args[0].slice(1); // Remove the '!' prefix
+
+  // For setTimer command: !setTimer <time> <boss_name>
+  // For other commands: !command [boss_name] (optional)
   const commandArgs = args.slice(1);
 
   const command = commands[commandName];

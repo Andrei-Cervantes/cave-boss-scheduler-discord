@@ -6,7 +6,7 @@ class TimerService {
     this.activeTimers = new Map(); // Track active timers by channel ID
   }
 
-  scheduleBossAlerts(channel, totalMinutes) {
+  scheduleBossAlerts(channel, totalMinutes, bossName) {
     const channelId = channel.id;
 
     // Cancel any existing timers for this channel
@@ -26,7 +26,8 @@ class TimerService {
       alertPreparationTime,
       CONFIG.PREP_MESSAGE,
       channel,
-      CONFIG.TIMEZONE
+      CONFIG.TIMEZONE,
+      bossName
     );
 
     // Schedule spawn alert
@@ -34,7 +35,8 @@ class TimerService {
       alertSpawnTime,
       CONFIG.SPAWN_MESSAGE,
       channel,
-      CONFIG.TIMEZONE
+      CONFIG.TIMEZONE,
+      bossName
     );
 
     // Store the timers
@@ -42,6 +44,7 @@ class TimerService {
       prepJob,
       spawnJob,
       totalMinutes,
+      bossName,
       startTime: new Date(),
       prepTime: alertPreparationTime,
       spawnTime: alertSpawnTime,
@@ -54,11 +57,11 @@ class TimerService {
     };
   }
 
-  scheduleAlert(alertTime, message, channel, timezone) {
+  scheduleAlert(alertTime, message, channel, timezone, bossName) {
     return new CronJob(
       alertTime,
       () => {
-        channel.send(message);
+        channel.send(`**${bossName}** ${message}`);
         // Remove the timer from active timers after it fires
         const channelId = channel.id;
         const timers = this.activeTimers.get(channelId);

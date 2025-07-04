@@ -16,8 +16,10 @@ export async function handleStopTimer(message, args) {
       (activeTimer.prepTime - new Date()) / (1000 * 60)
     );
 
+    const bossName = activeTimer.bossName || "Unknown Boss";
+
     return message.reply(
-      `⏹️ Timer stopped! The boss alert was scheduled for ${activeTimer.prepTime.toLocaleTimeString(
+      `⏹️ Timer stopped for **${bossName}**! The boss alert was scheduled for ${activeTimer.prepTime.toLocaleTimeString(
         "en-US",
         {
           timeZone: "Asia/Manila",

@@ -3,12 +3,17 @@ import { CONFIG } from "../config/config.js";
 import { TimerService } from "../services/timerService.js";
 
 export async function handleSetTimer(message, args) {
-  if (args.length === 0) {
-    return message.reply("⏰ Usage: `!setTimer 1h30m`, `!setTimer 90m`, etc.");
+  if (args.length < 2) {
+    return message.reply(
+      "⏰ Usage: `!setTimer <time> <boss_name>`\nExample: `!setTimer 1h30m Cave Boss`, `!setTimer 90m Dragon`"
+    );
   }
 
   try {
-    const totalMinutes = parseDuration(args[0]);
+    const timeArg = args[0];
+    const bossName = args.slice(1).join(" "); // Join remaining args as boss name
+
+    const totalMinutes = parseDuration(timeArg);
 
     if (totalMinutes <= 5) {
       return message.reply(
@@ -18,11 +23,12 @@ export async function handleSetTimer(message, args) {
 
     const timerInfo = await TimerService.scheduleBossAlerts(
       message.channel,
-      totalMinutes
+      totalMinutes,
+      bossName
     );
 
     return message.reply(
-      `✅ Timer set for ${totalMinutes} minutes!\n` +
+      `✅ Timer set for **${bossName}** in ${totalMinutes} minutes!\n` +
         `⏰ Prep alert: ${timerInfo.prepTime.toLocaleTimeString("en-US", {
           timeZone: CONFIG.TIMEZONE,
         })} (${CONFIG.PREP_ALERT_TIME}m before spawn)\n` +

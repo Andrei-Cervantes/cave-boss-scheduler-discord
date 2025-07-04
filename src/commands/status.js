@@ -17,10 +17,17 @@ export async function handleStatus(message, args) {
     (activeTimer.spawnTime - now) / (1000 * 60)
   );
 
+  const bossName = activeTimer.bossName || "Unknown Boss";
+
   const statusEmbed = {
     color: 0x00ff00,
-    title: "⏰ Active Boss Timer",
+    title: `⏰ Active Boss Timer - ${bossName}`,
     fields: [
+      {
+        name: "Boss Name",
+        value: bossName,
+        inline: true,
+      },
       {
         name: "Total Duration",
         value: `${activeTimer.totalMinutes} minutes`,

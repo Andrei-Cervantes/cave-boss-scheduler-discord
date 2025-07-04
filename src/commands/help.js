@@ -5,9 +5,9 @@ export async function handleHelp(message, args) {
     description: "Manage boss spawn timers for your guild",
     fields: [
       {
-        name: "!setTimer <time>",
+        name: "!setTimer <time> <boss_name>",
         value:
-          "Set a boss spawn timer\nExample: `!setTimer 1h30m`, `!setTimer 90m`\nMinimum time: 6 minutes",
+          "Set a boss spawn timer\nExample: `!setTimer 1h30m Cave Boss`, `!setTimer 90m Dragon`\nMinimum time: 6 minutes",
         inline: false,
       },
       {
